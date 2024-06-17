@@ -25,6 +25,7 @@ const RecordAnswerSection = ({mockInterviewQuestion, activeQuestionIndex, interv
     interimResult,
     isRecording,
     results,
+    setResults,
     startSpeechToText,
     stopSpeechToText,
   } = useSpeechToText({
@@ -84,8 +85,9 @@ const RecordAnswerSection = ({mockInterviewQuestion, activeQuestionIndex, interv
 
     if(response){
       toast("User Answer recorded successfully...");
+      setUserAnswer("");
+      setResults([]);
     }
-    setUserAnswer("");
     setLoading(false);
   }
 

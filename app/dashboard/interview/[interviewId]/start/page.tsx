@@ -6,6 +6,8 @@ import { MockInterview } from "../../../../../utils/schema";
 import { eq } from "drizzle-orm";
 import QuestionsSection from "./_components/QuestionsSection";
 import RecordAnswerSection from "./_components/RecordAnswerSection";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const StartInterview = ({ params }) => {
   const [interviewData, setInterviewData] = useState({});
@@ -30,12 +32,42 @@ const StartInterview = ({ params }) => {
 
   console.log(mockInterviewQuestion);
 
-  return <div>
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-        <QuestionsSection mockInterviewQuestion={mockInterviewQuestion} activeQuestionIndex={activeQuestionIndex}/>
-        <RecordAnswerSection mockInterviewQuestion={mockInterviewQuestion} activeQuestionIndex={activeQuestionIndex} interviewData={interviewData}/>
+  return (
+    <div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+        <QuestionsSection
+          mockInterviewQuestion={mockInterviewQuestion}
+          activeQuestionIndex={activeQuestionIndex}
+        />
+        <RecordAnswerSection
+          mockInterviewQuestion={mockInterviewQuestion}
+          activeQuestionIndex={activeQuestionIndex}
+          interviewData={interviewData}
+        />
+      </div>
+      <div className="flex justify-end gap-6">
+        {activeQuestionIndex > 0 && (
+          <Button
+            onClick={() => setActiveQuestionIndex(activeQuestionIndex - 1)}
+          >
+            Prev
+          </Button>
+        )}
+        {activeQuestionIndex !== mockInterviewQuestion?.length - 1 && (
+          <Button
+            onClick={() => setActiveQuestionIndex(activeQuestionIndex + 1)}
+          >
+            Next
+          </Button>
+        )}
+        {activeQuestionIndex === mockInterviewQuestion?.length - 1 && (
+          <Link href={`/dashboard/interview/${interviewData?.mockId}/feedback`}>
+            <Button>End Interview</Button>
+          </Link>
+        )}
+      </div>
     </div>
-  </div>;
+  );
 };
 
 export default StartInterview;
