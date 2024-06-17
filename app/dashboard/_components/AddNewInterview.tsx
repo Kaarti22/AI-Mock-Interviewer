@@ -21,6 +21,7 @@ import { MockInterview } from "../../../utils/schema";
 import { v4 as uuidv4 } from "uuid";
 import { useUser } from "@clerk/clerk-react";
 import moment from "moment";
+import { useRouter } from "next/navigation";
 
 const AddNewInterview = () => {
   const [openDialog, setOpenDialog] = useState(false);
@@ -33,6 +34,7 @@ const AddNewInterview = () => {
 
   const [jsonResponse, setJsonResponse] = useState([]);
 
+  const router = useRouter();
   const { user } = useUser();
 
   const onSubmit = async (ev) => {
@@ -44,8 +46,8 @@ const AddNewInterview = () => {
 
     const result = await chatSession.sendMessage(InputPrompt);
 
-    const MockJSONResponse = (result.response
-      .text())
+    const MockJSONResponse = result.response
+      .text()
       .replace("```json", "")
       .replace("```", "");
 
@@ -68,11 +70,12 @@ const AddNewInterview = () => {
 
       console.log("Inserted ID: ", res);
 
-      if(res){
+      if (res) {
         setOpenDialog(false);
+        router.push('/dashboard/interview/' + res[0]?.mockId);
       }
     } else {
-        console.log("Error");
+      console.log("Error");
     }
 
     setLoading(false);
