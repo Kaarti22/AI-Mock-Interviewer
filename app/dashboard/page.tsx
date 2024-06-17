@@ -1,8 +1,12 @@
-import React from 'react'
+import React from 'react';
+import {UserButton} from "@clerk/nextjs";
 
 const Dashboard = () => {
   return (
-    <div>Dasboard Page</div>
+    <div>
+      Dasboard Page
+      <UserButton/>
+    </div>
   )
 }
 
