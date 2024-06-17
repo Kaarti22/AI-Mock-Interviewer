@@ -42,7 +42,7 @@ const AddNewInterview = () => {
     ev.preventDefault();
     console.log(jobPosition, jobDesc, jobExperience);
 
-    const InputPrompt = `Job Position: ${jobPosition}, Job Description: ${jobDesc}, Years of Experience: ${jobExperience}. Depending on the job position, job description and years of experience, give me ${process.env.NEXT_PUBLIC_INTERVIEW_QUESTION_COUNT} interview questions along with their answers in JSON format. Give me questions and answers fields in JSON.`;
+    const InputPrompt = `Job Position: ${jobPosition}, Job Description: ${jobDesc}, Years of Experience: ${jobExperience}. Depending on the job position, job description and years of experience, give me ${process.env.NEXT_PUBLIC_INTERVIEW_QUESTION_COUNT} interview questions along with their answers in JSON format. Give me questions and answers fields in JSON. Only provide me the json fields. At the end please do not provide any explanation.`;
 
     const result = await chatSession.sendMessage(InputPrompt);
 
@@ -51,7 +51,6 @@ const AddNewInterview = () => {
       .replace("```json", "")
       .replace("```", "");
 
-    // console.log(JSON.parse(MockJSONResponse));
     setJsonResponse(MockJSONResponse);
 
     if (MockJSONResponse) {
