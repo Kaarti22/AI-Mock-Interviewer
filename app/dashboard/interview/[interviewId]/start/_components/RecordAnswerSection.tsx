@@ -5,12 +5,20 @@ import Webcam from "react-webcam";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import useSpeechToText from "react-hook-speech-to-text";
-import { Mic } from "lucide-react";
+import { Mic, StopCircle } from "lucide-react";
 import { toast } from "sonner";
 import { chatSession } from "@/utils/geminiAIModal";
+import { db } from "@/utils/db";
+import { UserAnswer } from "@/utils/schema";
+import { useUser } from "@clerk/nextjs";
+import moment from "moment";
 
-const RecordAnswerSection = ({mockInterviewQuestion, activeQuestionIndex}) => {
+const RecordAnswerSection = ({mockInterviewQuestion, activeQuestionIndex, interviewData}) => {
   const [userAnswer, setUserAnswer] = useState("");
+  
+  const {user} = useUser();
+
+  const [loading, setLoading] = useState(false);
 
   const {
     error,
@@ -30,28 +38,55 @@ const RecordAnswerSection = ({mockInterviewQuestion, activeQuestionIndex}) => {
     results.map((result) => (setUserAnswer(result?.transcript)));
   }, [results]);
 
-  const saveUserAnswer = async () => {
+  useEffect(() => {
+    if(!isRecording && userAnswer?.length > 10){
+      updateUserAnswer();
+    }
+  }, [userAnswer]);
+
+  const StartStopRecording = () => {
     if(isRecording){
+      setLoading(true);
       stopSpeechToText();
-      if(userAnswer?.length < 10){
-        toast("Error while saving your answer, please record again");
-        return;
-      }
-      const feedbackPrompt = `Question: ${mockInterviewQuestion[activeQuestionIndex]?.question}, User Answer: ${userAnswer}, Depending on question and user answer for the given interview question, please give us a rating for answer and feedback as the area of improvement if any in just 3 to 5 lines to improve it in JSON format with rating field and feedback field.`
-
-      const result = await chatSession.sendMessage(feedbackPrompt);
-
-      const MockJSONResponse = (result.response
-        .text())
-        .replace("```json", "")
-        .replace("```", "");
-
-      console.log(MockJSONResponse);
-
-      const JsonFeedbackResponse = JSON.parse(MockJSONResponse);
     } else {
+      setLoading(false);
       startSpeechToText();
     }
+  }
+
+  const updateUserAnswer = async () => {
+    console.log(userAnswer);
+    setLoading(true);
+
+    const feedbackPrompt = `Question: ${mockInterviewQuestion[activeQuestionIndex]?.question}, User Answer: ${userAnswer}, Depending on question and user answer for the given interview question, please give us a rating for answer and feedback as the area of improvement if any in just 3 to 5 lines to improve it in JSON format with rating field and feedback field.`
+
+    const result = await chatSession.sendMessage(feedbackPrompt);
+
+    const MockJSONResponse = (result.response
+      .text())
+      .replace("```json", "")
+      .replace("```", "");
+
+    console.log(MockJSONResponse);
+
+    const JsonFeedbackResponse = JSON.parse(MockJSONResponse);
+
+    const response = await db.insert(UserAnswer).values({
+      mockIdRef: interviewData?.mockId,
+      question: mockInterviewQuestion[activeQuestionIndex]?.question,
+      correctAns: mockInterviewQuestion[activeQuestionIndex]?.answer,
+      userAns: userAnswer,
+      feedback: JsonFeedbackResponse?.feedback,
+      rating: JsonFeedbackResponse?.rating,
+      userEmail: user?.primaryEmailAddress?.emailAddress,
+      createdAt: moment().format('DD-MM-yyyy')
+    });
+
+    if(response){
+      toast("User Answer recorded successfully...");
+    }
+    setUserAnswer("");
+    setLoading(false);
   }
 
   return (
@@ -70,16 +105,17 @@ const RecordAnswerSection = ({mockInterviewQuestion, activeQuestionIndex}) => {
           style={{ height: 300, width: "100%", zIndex: 10 }}
         />
       </div>
-      <Button variant={"outline"} className="my-10" onClick={saveUserAnswer}>
+      <Button disabled={loading} variant={"outline"} className="my-10" onClick={StartStopRecording}>
         {isRecording ? (
-          <h2 className="text-red-600 flex flex-row items-center justify-evenly">
-            <Mic /> 'Recording...'
+          <h2 className="text-red-600 animate-pulse flex gap-2 items-center">
+            <StopCircle/> Stop Recording
           </h2>
         ) : (
-          "Record Answer"
+          <h2 className="text-blue-700 flex gap-2 items-center">
+            <Mic/> Record Answer
+          </h2>
         )}
       </Button>
-      <Button onClick={() => console.log(userAnswer)}>Show user answer</Button>
     </div>
   );
 };
