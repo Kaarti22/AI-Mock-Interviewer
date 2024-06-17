@@ -4,8 +4,7 @@ import {UserButton} from "@clerk/nextjs";
 const Dashboard = () => {
   return (
     <div>
-      Dasboard Page
-      <UserButton/>
+      
     </div>
   )
 }
