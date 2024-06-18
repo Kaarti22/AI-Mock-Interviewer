@@ -15,7 +15,7 @@ const InterviewItemCard = ({ interview }) => {
   };
 
   return (
-    <div className="border shadow-sm rounded-lg p-3">
+    <div className="border border-blue-900 shadow-sm rounded-lg p-3">
       <h2 className="font-bold text-blue-700">{interview?.jobPosition}</h2>
       <h2 className="text-sm text-gray-600">
         {interview?.jobExperience} years of experience
