@@ -33,7 +33,7 @@ const Feedbackpage = ({ params }) => {
       SumRating += +item?.rating;
     })}
     console.log(SumRating);
-    setFinalRating((SumRating/len));
+    setFinalRating((SumRating/5));
     console.log(finalRating);
   }, [feedbackList]);
 
