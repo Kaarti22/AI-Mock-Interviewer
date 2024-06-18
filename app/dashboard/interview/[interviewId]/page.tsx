@@ -29,10 +29,10 @@ const Interview = ({ params }) => {
 
   return (
     <div className="my-10">
-      <h2 className="font-bold text-2xl">Let's Get Started</h2>
+      <h2 className="font-bold text-2xl text-blue-700">Let's Get Started</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
         <div className="flex flex-col my-5 gap-5">
-          <div className="flex flex-col p-5 rounded-lg border gap-5">
+          <div className="flex flex-col p-5 rounded-lg border border-blue-900 gap-5">
             <h2>
               <strong>Job Role/Job Position: </strong>{" "}
               {interviewData.jobPosition}
