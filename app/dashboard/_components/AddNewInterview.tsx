@@ -137,8 +137,8 @@ const AddNewInterview = () => {
                   <Button type="submit" disabled={loading}>
                     {loading ? (
                       <>
-                        <LoaderCircle className="animate-spin" /> "Generating
-                        from AI"{" "}
+                        <LoaderCircle className="animate-spin" /> Generating
+                        from AI{" "}
                       </>
                     ) : (
                       "Start Interview"

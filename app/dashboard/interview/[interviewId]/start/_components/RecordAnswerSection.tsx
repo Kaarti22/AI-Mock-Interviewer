@@ -87,6 +87,7 @@ const RecordAnswerSection = ({mockInterviewQuestion, activeQuestionIndex, interv
       toast("User Answer recorded successfully...");
       setUserAnswer("");
       setResults([]);
+      setLoading(false);
     }
     setLoading(false);
   }
