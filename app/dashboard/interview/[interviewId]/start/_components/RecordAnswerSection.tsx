@@ -56,7 +56,6 @@ const RecordAnswerSection = ({mockInterviewQuestion, activeQuestionIndex, interv
   }
 
   const updateUserAnswer = async () => {
-    console.log(userAnswer);
     setLoading(true);
 
     const feedbackPrompt = `Question: ${mockInterviewQuestion[activeQuestionIndex]?.question}, User Answer: ${userAnswer}, Depending on question and user answer for the given interview question, please give us a rating for answer and feedback as the area of improvement if any in just 3 to 5 lines to improve it in JSON format with rating field and feedback field.`
@@ -67,8 +66,6 @@ const RecordAnswerSection = ({mockInterviewQuestion, activeQuestionIndex, interv
       .text())
       .replace("```json", "")
       .replace("```", "");
-
-    console.log(MockJSONResponse);
 
     const JsonFeedbackResponse = JSON.parse(MockJSONResponse);
 
@@ -93,7 +90,7 @@ const RecordAnswerSection = ({mockInterviewQuestion, activeQuestionIndex, interv
   }
 
   return (
-    <div className="flex items-center justify-center flex-col">
+    <div className="flex items-center justify-start flex-col">
       <div className="flex flex-col mt-20 justify-center items-center rounded-lg p-5 bg-black">
         <Image
           src={"/webcam.png"}
