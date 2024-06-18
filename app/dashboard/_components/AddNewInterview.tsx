@@ -37,7 +37,7 @@ const AddNewInterview = () => {
   const router = useRouter();
   const { user } = useUser();
 
-  const onSubmit = async (ev) => {
+  const onSubmit = async (ev: { preventDefault: () => void; }) => {
     setLoading(true);
     ev.preventDefault();
     console.log(jobPosition, jobDesc, jobExperience);
