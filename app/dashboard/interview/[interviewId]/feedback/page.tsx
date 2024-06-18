@@ -18,13 +18,23 @@ const Feedbackpage = ({ params }) => {
   const router = useRouter();
 
   const [feedbackList, setFeedbackList] = useState([]);
+  const [finalRating, setFinalRating] = useState(0);
 
   useEffect(() => {
     getFeedback();
   }, []);
 
   useEffect(() => {
-    console.log("Feedback list: ", feedbackList);
+    console.log(feedbackList);
+    const len = feedbackList?.length;
+    console.log(len);
+    let SumRating = 0;
+    {len > 0 && feedbackList.map((item, index) => {
+      SumRating += +item?.rating;
+    })}
+    console.log(SumRating);
+    setFinalRating((SumRating/len));
+    console.log(finalRating);
   }, [feedbackList]);
 
   const getFeedback = async () => {
@@ -42,17 +52,17 @@ const Feedbackpage = ({ params }) => {
         <h2 className="font-bold text-xl text-gray-500">No Interview found</h2>
       ) : (
         <>
-          <h2 className="text-3xl font-bold text-green-500">
+          <h2 className="text-3xl font-extrabold text-green-500">
             Congratulations!
           </h2>
-          <h2 className="font-bold text-2xl">
+          <h2 className="font-semibold text-2xl text-green-400">
             Here is your interview feedback
           </h2>
           <h2 className="text-blue-700 text-lg my-3">
-            Your overall interview rating: <strong>7/10</strong>  
+            Your overall interview rating: <strong>{finalRating}/{feedbackList?.length}</strong>  
           </h2>
           <h2 className="text-sm text-gray-500">
-            Find below interview question with correct answer
+            Analyse your recorded answer with AI's answer for the following interview questions
           </h2>
           {feedbackList?.length > 0 &&
             feedbackList.map((item, index) => (
