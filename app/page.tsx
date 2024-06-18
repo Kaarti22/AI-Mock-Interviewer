@@ -1,12 +1,14 @@
-import Image from "next/image";
-import React from "react";
-import { Button } from "../components/ui/button";
+"use client";
+
+import React, { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
-  return (
-    <div>
-      Hello world
-      <Button>Subscribe</Button>
-    </div>
-  );
+  const router =useRouter();
+
+  useEffect(() => {
+    router.push(`/dashboard`);
+  }, [router]);
+
+  return null;
 }
